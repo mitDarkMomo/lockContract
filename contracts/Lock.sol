@@ -77,7 +77,7 @@ contract Lock {
     /**
      * @dev caculate the amount to withdraw and transfer to specified address
      */ 
-    function withdraw(address payable toAddr) external onlyOwner {
+    function withdraw(address payable toAddr) external{
         require(toAddr != address(0), "toAddr should not be 0");
         require(pays[msg.sender]._amountPerMonth > 0, "fromAddr should have applied for quota or be in lock time");
         
@@ -91,7 +91,8 @@ contract Lock {
             delete pays[msg.sender];
         }
         if(amount > 0) {
-        toAddr.transfer(amount);
+            require(amount <= address(this).balance, "not enough balance to transfer");
+            toAddr.transfer(amount);
         }
     }
 
