@@ -176,10 +176,7 @@ contract('Lock', (accounts) => {
     // it('withdraw correctly', async () => {
     //     const lockInstance = await Lock.deployed();
         
-    //     const rate = 12;
-    //     await lockInstance.applyQuota(months3, rate, {value: web3.utils.toWei('10', 'ether')});
-        
-    //     // 30 days later
+    //     // 90 days later
     //     let passby = day * 90;
     //     await web3.currentProvider.send({
     //         jsonrpc: "2.0", 
@@ -195,7 +192,7 @@ contract('Lock', (accounts) => {
     //     });
         
     //     try{
-    //         await lockInstance.withdraw(accounts[1]);
+    //         await lockInstance.withdraw(accounts[1], {from: accounts[1]});
     //     }catch(error) {
 
     //     }
