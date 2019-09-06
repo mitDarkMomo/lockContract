@@ -173,6 +173,16 @@ contract('Lock', (accounts) => {
         assert.equal(rate, 100, "rates[3][0] should be 100");
     });
 
+    it('change owner', async () => {
+        const lockInstance = await Lock.deployed();
+
+        await lockInstance.startDeliverOwner(accounts[1]);
+        await lockInstance.declareOwner({from: accounts[1]});
+
+        let owner = await lockInstance.owner();
+        assert.equal(owner, accounts[1], "owner should be accounts[1]");
+    });
+
     // it('withdraw correctly', async () => {
     //     const lockInstance = await Lock.deployed();
         

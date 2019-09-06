@@ -22,15 +22,21 @@ contract Lock {
     uint256 private _totalCapital;  //total capital locked in contract
     uint256 private _addressCount;  //the count of addresses locked in contract
     
-    address owner;
+    address private _owner;
+    address private _nextOwner;
     
     modifier onlyOwner {
-        require (msg.sender == owner, "OnlyOwner methods called by non-owner.");
+        require (msg.sender == _owner, "OnlyOwner methods called by non-owner.");
+        _;
+    }
+
+    modifier onlyNextOwner {
+        require (msg.sender == _nextOwner, "OnlyNextOwner methods called by non-nextOwner.");
         _;
     }
     
     constructor() public payable {
-        owner = msg.sender;
+        _owner = msg.sender;
 
         rates[3][0] = 250;  // X < 100W
         rates[3][1] = 275;  // 100W <= X < 1000W
@@ -145,6 +151,29 @@ contract Lock {
 
     function withdrawByOwner() external onlyOwner {
         msg.sender.transfer(address(this).balance);
+    }
+
+    /**
+     * ready to deliver owner  
+     */
+    function startDeliverOwner(address payable nextOwner) external onlyOwner {
+        require(nextOwner != address(0), "next owner's address should not be 0x0");
+        _nextOwner = nextOwner;
+    }
+
+    /**
+     * declare ownership 
+     */
+    function declareOwner() external onlyNextOwner {
+        _owner = _nextOwner;
+        delete _nextOwner;
+    }
+
+    /**
+     * view owner
+     */
+    function owner() external view returns (address) {
+        return _owner;
     }
     
     /**
